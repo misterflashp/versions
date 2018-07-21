@@ -5,6 +5,7 @@ let addVersion = (req, res, next) => {
   let versionSchema = joi.object().keys({
     version: joi.string().required(),
     fileUrl: joi.string().required(),
+    type: joi.string().required()
   });
   let { error } = joi.validate(req.body, versionSchema);
   if (error) res.status(400).send({
