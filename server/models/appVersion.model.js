@@ -4,7 +4,7 @@ let mongoose = require('mongoose');
 let appSchema = new mongoose.Schema({
   version: {
     type: String,
-    unique: true
+    required: true
   },
   fileName: {
     type: String
@@ -15,7 +15,7 @@ let appSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    default: 'm'
+    required: true
   },
   createdOn: {
     type: Date,

@@ -6,34 +6,36 @@ let appVersionDbo = require('../dbos/appVersion.dbo');
 * @api {post} /version To add a version details.
 * @apiName addVersion
 * @apiGroup AppDetails
-* @apiParam {String} versionNumber Required Version number of the application.
-  @apiParam {String} fileUrl Required File URL of application.
+* @apiParam {String} version Required Version number of the application.
+* @apiParam {String} fileUrl Required File URL of application.
+* @apiParam {String} type Required Device type.
 * @apiError VersionDataAlreadyExists The version data you aretrying to save is already present.
 
 * @apiErrorExample VersionDataAlreadyExists-Response:
 * {
-*    status: 400,
+*    success: false,
 *    message: 'Version data already exists'
 * }
 * @apiError ErrorSavingData Error while saving data
 * @apiErrorExample ErrorSavingData-Response:
 * {
-*    status: 400,
+*    success: false,
 *    message: 'Error while saving data'
 * }
 * @apiSuccessExample Response : 
 * {
-*    status: 200,
+*    success: true,
 *    message: 'Saved successfully'
 * }
 */
 let addVersion = (req, res) => {
   let details = req.body;
-  let { version } = details;
+  let { version,
+    type } = details;
   details.fileName = details.fileUrl.split('/').slice(-1);
   async.waterfall([
     (next) => {
-      appVersionDbo.getAppDetails(version, 'm',
+      appVersionDbo.getAppDetails(version, type,
         (error, result) => {
           if (error) next({
             status: 400,
@@ -72,23 +74,34 @@ let addVersion = (req, res) => {
 * @api {get} /version/latest To get latest version .
 * @apiName getLatestVersion
 * @apiGroup AppDetails
-* @apiError VersionDataAlreadyExists The version data you aretrying to save is already present.
+* @apiParam {String} type Required Device type.
+* @apiError ErrorWhileGettingLatestVersion Error occured while getting latest version
 * @apiErrorExample ErrorWhileGettingLatestVersion-Response:
 * {
-*   status: 500,
+*   success: false,
 *   message: 'Error while getting latest version'
 * }
-* @apiSuccess {Object} LatestVersion version data/ Latest version not found response
-* @apiSuccessExample Response : 
+* @apiSuccessExample Response:
 * {
-*   status: 200,
+*   success: true,
+*   version: package version,
+*   fileName: Name of the file,
+*   fileUrl: URL of package,
+*   type: compatable device type,
+*   createdOn: created date,
+*   checksum: package checksum
+* }
+* @apiErrorExample latestVersionNotFound-Response : 
+* {
+*   success: false,
 *   message: 'Latest version not found'
 * }
 */
 let getLatestVersion = (req, res) => {
+  let { type } = req.query;
   async.waterfall([
     (next) => {
-      appVersionDbo.listAllVersions('m',
+      appVersionDbo.listAllVersions(type,
         (error, result) => {
           if (error) next({
             status: 500,
@@ -121,20 +134,20 @@ let getLatestVersion = (req, res) => {
 * @apiError ErrorWhileGettingVersions Error while gettng versions.
 * @apiErrorExample ErrorWhileGettingVersions-Response:
 * {
-*   status: 500,
+*   success: false,
 *   message: 'Error while getting versions'
 * }
-* @apiSuccess {Object} All versions data
-* @apiSuccessExample Response : 
+*  @apiSuccessExample Response : 
 * {
-*   status: 200,
+*   success: true,
 *   list: Array of all version objects
 * }
 */
 let listAllVersions = (req, res) => {
+  let { type } = req.body
   async.waterfall([
     (next) => {
-      appVersionDbo.listAllVersions('m',
+      appVersionDbo.listAllVersions(type,
         (error, result) => {
           if (error) next({
             status: 500,
@@ -162,19 +175,18 @@ let listAllVersions = (req, res) => {
 * @apiError ErrorWhileGettingUpdatedVersions Error while gettng updated versions.
 * @apiErrorExample ErrorWhileGettingUpdatedVersions-Response:
 * {
-*   status: 500,
+*   success: false,
 *   message: 'Error while getting updated versions'
 * }
-* @apiSuccess {Object} AllVersionsData
-* @apiSuccessExample Response : 
+*@apiSuccessExample Response : 
 * {
-*   status: 200,
+*   success: true,
 *   list: Array of all updated version objects.
 * }
 */
 let getUpdatedVersions = (req, res) => {
-  let version = req.query['version'];
-  let type = req.query['type'];
+  let { version,
+    type } = req.query;
   async.waterfall([
     (next) => {
       appVersionDbo.getUpdatedVersions(version, type,
