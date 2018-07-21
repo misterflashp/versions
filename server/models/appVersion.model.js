@@ -6,7 +6,7 @@ let appSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
-  fineName: {
+  fileName: {
     type: String
   },
   fileUrl: {
