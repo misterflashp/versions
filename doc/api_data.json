@@ -72,7 +72,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "versions/server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
@@ -128,7 +128,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "versions/server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
@@ -137,6 +137,26 @@
     "title": "To get the list of all updated versions .",
     "name": "getUpdatedVersions",
     "group": "AppDetails",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Required Device type.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "version",
+            "description": "<p>Required current version.</p>"
+          }
+        ]
+      }
+    },
     "error": {
       "fields": {
         "Error 4xx": [
@@ -166,7 +186,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "versions/server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
@@ -175,6 +195,19 @@
     "title": "To get the list of all versions .",
     "name": "listAllVersions",
     "group": "AppDetails",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Required Device type.</p>"
+          }
+        ]
+      }
+    },
     "error": {
       "fields": {
         "Error 4xx": [
@@ -204,7 +237,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "versions/server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   }
 ]

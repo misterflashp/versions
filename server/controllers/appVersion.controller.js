@@ -131,6 +131,7 @@ let getLatestVersion = (req, res) => {
 * @api {get} /version/list To get the list of all versions .
 * @apiName listAllVersions
 * @apiGroup AppDetails
+* @apiParam {String} type Required Device type.
 * @apiError ErrorWhileGettingVersions Error while gettng versions.
 * @apiErrorExample ErrorWhileGettingVersions-Response:
 * {
@@ -172,6 +173,8 @@ let listAllVersions = (req, res) => {
 * @api {get} /version/updated To get the list of all updated versions .
 * @apiName getUpdatedVersions
 * @apiGroup AppDetails
+* @apiParam {String} type Required Device type.
+* @apiParam {String} version Required current version.
 * @apiError ErrorWhileGettingUpdatedVersions Error while gettng updated versions.
 * @apiErrorExample ErrorWhileGettingUpdatedVersions-Response:
 * {
