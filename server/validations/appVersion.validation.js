@@ -1,11 +1,11 @@
 let joi = require('joi');
 
 
-let addVersion = (req, res, next) => {
+let addAppDetails = (req, res, next) => {
   let versionSchema = joi.object().keys({
-    version: joi.string().required(),
+    version: joi.number().required(),
     fileUrl: joi.string().required(),
-    type: joi.string().required()
+    appCode: joi.string().required()
   });
   let { error } = joi.validate(req.body, versionSchema);
   if (error) res.status(400).send({
@@ -17,7 +17,7 @@ let addVersion = (req, res, next) => {
 
 let getLatestVersion = (req, res, next) => {
   let updatedVersionsSchema = joi.object().keys({
-    type: joi.string().required()
+    appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
   if (error) res.status(400).send({
@@ -29,7 +29,7 @@ let getLatestVersion = (req, res, next) => {
 
 let listAllVersions = (req, res, next) => {
   let updatedVersionsSchema = joi.object().keys({
-    type: joi.string().required()
+    appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
   if (error) res.status(400).send({
@@ -41,8 +41,8 @@ let listAllVersions = (req, res, next) => {
 
 let getUpdatedVersions = (req, res, next) => {
   let updatedVersionsSchema = joi.object().keys({
-    version: joi.string().required(),
-    type: joi.string().required()
+    version: joi.number().required(),
+    appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
   if (error) res.status(400).send({
@@ -53,7 +53,7 @@ let getUpdatedVersions = (req, res, next) => {
 };
 
 module.exports = {
-  addVersion,
+  addAppDetails,
   getUpdatedVersions,
   getLatestVersion,
   listAllVersions

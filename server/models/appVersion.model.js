@@ -3,17 +3,18 @@ let mongoose = require('mongoose');
 
 let appSchema = new mongoose.Schema({
   version: {
-    type: String,
+    type: Number,
     required: true
   },
   fileName: {
-    type: String
+    type: String,
+    required: true
   },
   fileUrl: {
     type: String,
-    unique: true
+    required: true
   },
-  type: {
+  appCode: {
     type: String,
     required: true
   },

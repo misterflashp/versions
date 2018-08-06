@@ -3,47 +3,47 @@ let appVersionDbo = require('../dbos/appVersion.dbo');
 
 
 /**
-* @api {post} /version To add a version details.
+* @api {post} /version To add app details.
 * @apiName addVersion
-* @apiGroup AppDetails
-* @apiParam {String} version Required Version number of the application.
+* @apiGroup addAppDetails
+* @apiParam {Number} version Required Version number of the application.
 * @apiParam {String} fileUrl Required File URL of application.
-* @apiParam {String} type Required Device type.
-* @apiError VersionDataAlreadyExists The version data you aretrying to save is already present.
-
+* @apiParam {String} appCode Required App code [SDC/ SNC/ SLC].
+* @apiError AppDetailsAlreadyExists The app details you are trying to save is already exist.
+*
 * @apiErrorExample VersionDataAlreadyExists-Response:
 * {
 *    success: false,
-*    message: 'Version data already exists'
+*    message: 'App details already exists.'
 * }
-* @apiError ErrorSavingData Error while saving data
+* @apiError ErrorSavingData Error occurred while saving the app details.
 * @apiErrorExample ErrorSavingData-Response:
 * {
 *    success: false,
-*    message: 'Error while saving data'
+*    message: 'Error while saving the app details.'
 * }
 * @apiSuccessExample Response : 
 * {
 *    success: true,
-*    message: 'Saved successfully'
+*    message: 'App details saved successfully.'
 * }
 */
-let addVersion = (req, res) => {
+let addAppDetails = (req, res) => {
   let details = req.body;
   let { version,
-    type } = details;
+    appCode } = details;
   details.fileName = details.fileUrl.split('/').slice(-1);
   async.waterfall([
     (next) => {
-      appVersionDbo.getAppDetails(version, type,
+      appVersionDbo.getAppDetails(version, appCode,
         (error, result) => {
           if (error) next({
-            status: 400,
-            message: 'Error occured'
+            status: 500,
+            message: 'Error occured while fetching app details.'
           }, null);
           else if (result) next({
             status: 400,
-            message: 'Version data already exists'
+            message: 'App details already exists.'
           }, null);
           else next(null);
         });
@@ -51,12 +51,12 @@ let addVersion = (req, res) => {
       appVersionDbo.addAppDetails(details,
         (error, result) => {
           if (error) next({
-            status: 400,
-            message: 'Error while saving data'
+            status: 500,
+            message: 'Error occurred while saving the app details.'
           }, null);
           else next(null, {
             status: 200,
-            message: 'Saved successfully'
+            message: 'App details saved successfully.'
           });
         });
     }], (error, result) => {
@@ -71,15 +71,15 @@ let addVersion = (req, res) => {
 };
 
 /**
-* @api {get} /version/latest To get latest version .
+* @api {get} /version/latest To get latest version of an app.
 * @apiName getLatestVersion
 * @apiGroup AppDetails
-* @apiParam {String} type Required Device type.
+* @apiParam {String} appCode Required App code [SDC/ SNC/ SLC].
 * @apiError ErrorWhileGettingLatestVersion Error occured while getting latest version
 * @apiErrorExample ErrorWhileGettingLatestVersion-Response:
 * {
 *   success: false,
-*   message: 'Error while getting latest version'
+*   message: 'Error while getting latest version.'
 * }
 * @apiSuccessExample Response:
 * {
@@ -87,7 +87,7 @@ let addVersion = (req, res) => {
 *   version: package version,
 *   fileName: Name of the file,
 *   fileUrl: URL of package,
-*   type: compatable device type,
+*   appCode: compatable device type,
 *   createdOn: created date,
 *   checksum: package checksum
 * }
@@ -98,14 +98,14 @@ let addVersion = (req, res) => {
 * }
 */
 let getLatestVersion = (req, res) => {
-  let { type } = req.query;
+  let { appCode } = req.query;
   async.waterfall([
     (next) => {
-      appVersionDbo.listAllVersions(type,
+      appVersionDbo.listAllVersions(appCode,
         (error, result) => {
           if (error) next({
             status: 500,
-            message: 'Error while getting latest version'
+            message: 'Error while getting latest version.'
           }, null);
           else if (result && result.length) {
             result = result[0].toObject();
@@ -114,7 +114,7 @@ let getLatestVersion = (req, res) => {
             }, result));
           } else next({
             status: 400,
-            message: 'Latest version not found'
+            message: 'No latest version found.'
           }, null);
         });
     }], (error, result) => {
@@ -128,15 +128,15 @@ let getLatestVersion = (req, res) => {
 };
 
 /**
-* @api {get} /version/list To get the list of all versions .
+* @api {get} /version/list To get the list of all versions.
 * @apiName listAllVersions
 * @apiGroup AppDetails
-* @apiParam {String} type Required Device type.
+* @apiParam {String} appCode Required App code [SDC/ SNC/ SLC].
 * @apiError ErrorWhileGettingVersions Error while gettng versions.
 * @apiErrorExample ErrorWhileGettingVersions-Response:
 * {
 *   success: false,
-*   message: 'Error while getting versions'
+*   message: 'Error while getting versions.'
 * }
 *  @apiSuccessExample Response : 
 * {
@@ -145,14 +145,14 @@ let getLatestVersion = (req, res) => {
 * }
 */
 let listAllVersions = (req, res) => {
-  let { type } = req.body
+  let { appCode } = req.query
   async.waterfall([
     (next) => {
-      appVersionDbo.listAllVersions(type,
+      appVersionDbo.listAllVersions(appCode,
         (error, result) => {
           if (error) next({
             status: 500,
-            message: 'Error while getting versions'
+            message: 'Error while getting versions.'
           }, null);
           else next(null, {
             status: 200,
@@ -173,13 +173,13 @@ let listAllVersions = (req, res) => {
 * @api {get} /version/updated To get the list of all updated versions .
 * @apiName getUpdatedVersions
 * @apiGroup AppDetails
-* @apiParam {String} type Required Device type.
-* @apiParam {String} version Required current version.
+* @apiParam {String} appCode Required App code [SDC/ SNC/ SLC].
+* @apiParam {Number} version Required current version.
 * @apiError ErrorWhileGettingUpdatedVersions Error while gettng updated versions.
 * @apiErrorExample ErrorWhileGettingUpdatedVersions-Response:
 * {
 *   success: false,
-*   message: 'Error while getting updated versions'
+*   message: 'Error while getting updated versions.'
 * }
 *@apiSuccessExample Response : 
 * {
@@ -189,14 +189,14 @@ let listAllVersions = (req, res) => {
 */
 let getUpdatedVersions = (req, res) => {
   let { version,
-    type } = req.query;
+    appCode } = req.query;
   async.waterfall([
     (next) => {
-      appVersionDbo.getUpdatedVersions(version, type,
+      appVersionDbo.getUpdatedVersions(version, appCode,
         (error, result) => {
           if (error) next({
             status: 500,
-            message: 'Error while getting updated versions'
+            message: 'Error while getting updated versions.'
           }, null);
           else next(null, {
             status: 200,
@@ -214,7 +214,7 @@ let getUpdatedVersions = (req, res) => {
 }
 
 module.exports = {
-  addVersion,
+  addAppDetails,
   getLatestVersion,
   listAllVersions,
   getUpdatedVersions
