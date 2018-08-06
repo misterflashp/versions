@@ -5,7 +5,7 @@ let appVersionDbo = require('../dbos/appVersion.dbo');
 /**
 * @api {post} /version To add app details.
 * @apiName addVersion
-* @apiGroup addAppDetails
+* @apiGroup AppDetails
 * @apiParam {Number} version Required Version number of the application.
 * @apiParam {String} fileUrl Required File URL of application.
 * @apiParam {String} appCode Required App code [SDC/ SNC/ SLC].
@@ -91,6 +91,7 @@ let addAppDetails = (req, res) => {
 *   createdOn: created date,
 *   checksum: package checksum
 * }
+* @apiError LatestVersionNotFound No latest version found.
 * @apiErrorExample latestVersionNotFound-Response : 
 * {
 *   success: false,
