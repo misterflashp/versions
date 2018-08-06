@@ -2,7 +2,7 @@
   {
     "type": "post",
     "url": "/version",
-    "title": "To add a version details.",
+    "title": "To add app details.",
     "name": "addVersion",
     "group": "AppDetails",
     "parameter": {
@@ -10,7 +10,7 @@
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "version",
             "description": "<p>Required Version number of the application.</p>"
@@ -26,8 +26,8 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "type",
-            "description": "<p>Required Device type.</p>"
+            "field": "appCode",
+            "description": "<p>Required App code [SDC/ SNC/ SLC].</p>"
           }
         ]
       }
@@ -38,26 +38,26 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "VersionDataAlreadyExists",
-            "description": "<p>The version data you aretrying to save is already present.</p>"
+            "field": "AppDetailsAlreadyExists",
+            "description": "<p>The app details you are trying to save is already exist.</p>"
           },
           {
             "group": "Error 4xx",
             "optional": false,
             "field": "ErrorSavingData",
-            "description": "<p>Error while saving data</p>"
+            "description": "<p>Error occurred while saving the app details.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "VersionDataAlreadyExists-Response:",
-          "content": "{\n   success: false,\n   message: 'Version data already exists'\n}",
+          "content": "{\n   success: false,\n   message: 'App details already exists.'\n}",
           "type": "json"
         },
         {
           "title": "ErrorSavingData-Response:",
-          "content": "{\n   success: false,\n   message: 'Error while saving data'\n}",
+          "content": "{\n   success: false,\n   message: 'Error while saving the app details.'\n}",
           "type": "json"
         }
       ]
@@ -66,19 +66,19 @@
       "examples": [
         {
           "title": "Response : ",
-          "content": "{\n   success: true,\n   message: 'Saved successfully'\n}",
+          "content": "{\n   success: true,\n   message: 'App details saved successfully.'\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "versions/server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
     "type": "get",
     "url": "/version/latest",
-    "title": "To get latest version .",
+    "title": "To get latest version of an app.",
     "name": "getLatestVersion",
     "group": "AppDetails",
     "parameter": {
@@ -88,8 +88,8 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "type",
-            "description": "<p>Required Device type.</p>"
+            "field": "appCode",
+            "description": "<p>Required App code [SDC/ SNC/ SLC].</p>"
           }
         ]
       }
@@ -102,13 +102,19 @@
             "optional": false,
             "field": "ErrorWhileGettingLatestVersion",
             "description": "<p>Error occured while getting latest version</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "LatestVersionNotFound",
+            "description": "<p>No latest version found.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "ErrorWhileGettingLatestVersion-Response:",
-          "content": "{\n  success: false,\n  message: 'Error while getting latest version'\n}",
+          "content": "{\n  success: false,\n  message: 'Error while getting latest version.'\n}",
           "type": "json"
         },
         {
@@ -122,13 +128,13 @@
       "examples": [
         {
           "title": "Response:",
-          "content": "{\n  success: true,\n  version: package version,\n  fileName: Name of the file,\n  fileUrl: URL of package,\n  type: compatable device type,\n  createdOn: created date,\n  checksum: package checksum\n}",
+          "content": "{\n  success: true,\n  version: package version,\n  fileName: Name of the file,\n  fileUrl: URL of package,\n  appCode: compatable device type,\n  createdOn: created date,\n  checksum: package checksum\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "versions/server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
@@ -144,12 +150,12 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "type",
-            "description": "<p>Required Device type.</p>"
+            "field": "appCode",
+            "description": "<p>Required App code [SDC/ SNC/ SLC].</p>"
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Number",
             "optional": false,
             "field": "version",
             "description": "<p>Required current version.</p>"
@@ -171,7 +177,7 @@
       "examples": [
         {
           "title": "ErrorWhileGettingUpdatedVersions-Response:",
-          "content": "{\n  success: false,\n  message: 'Error while getting updated versions'\n}",
+          "content": "{\n  success: false,\n  message: 'Error while getting updated versions.'\n}",
           "type": "json"
         }
       ]
@@ -186,13 +192,13 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "versions/server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   },
   {
     "type": "get",
     "url": "/version/list",
-    "title": "To get the list of all versions .",
+    "title": "To get the list of all versions.",
     "name": "listAllVersions",
     "group": "AppDetails",
     "parameter": {
@@ -202,8 +208,8 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "type",
-            "description": "<p>Required Device type.</p>"
+            "field": "appCode",
+            "description": "<p>Required App code [SDC/ SNC/ SLC].</p>"
           }
         ]
       }
@@ -222,7 +228,7 @@
       "examples": [
         {
           "title": "ErrorWhileGettingVersions-Response:",
-          "content": "{\n  success: false,\n  message: 'Error while getting versions'\n}",
+          "content": "{\n  success: false,\n  message: 'Error while getting versions.'\n}",
           "type": "json"
         }
       ]
@@ -237,7 +243,7 @@
       ]
     },
     "version": "0.0.0",
-    "filename": "versions/server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
   }
 ]
