@@ -294,7 +294,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appMessage.controller.js",
     "groupTitle": "Message"
   },
   {
@@ -332,7 +332,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appMessage.controller.js",
     "groupTitle": "Message"
   },
   {
@@ -390,7 +390,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "server/controllers/appVersion.controller.js",
+    "filename": "server/controllers/appMessage.controller.js",
     "groupTitle": "Message"
   }
 ] });
