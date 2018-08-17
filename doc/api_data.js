@@ -245,5 +245,152 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "server/controllers/appVersion.controller.js",
     "groupTitle": "AppDetails"
+  },
+  {
+    "type": "post",
+    "url": "/message",
+    "title": "To add a message.",
+    "name": "addMessage",
+    "group": "Message",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Message to be saved.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ErrorWhileAddingMessage",
+            "description": "<p>Error while adding the message.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "ErrorWhileAddingMessage-Response:",
+          "content": "{\n  success: false,\n  message: 'Error while saving message'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Response : ",
+          "content": "{\n  success: true,\n  list: {\n   \"message\": \"This is the message\",\n   \"updatedOn\": \"2018-08-17T12:36:45.361Z\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "server/controllers/appVersion.controller.js",
+    "groupTitle": "Message"
+  },
+  {
+    "type": "get",
+    "url": "/message",
+    "title": "To get all available messages.",
+    "name": "getMessage",
+    "group": "Message",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ErrorWhileFetchingMessage",
+            "description": "<p>Error while fetching the messages.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "ErrorWhileFetchingMessage-Response:",
+          "content": "{\n  success: false,\n  message: 'Error while fetching message'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Response : ",
+          "content": "{\n  success: true,\n  list: List of all available messages with updated dates.\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "server/controllers/appVersion.controller.js",
+    "groupTitle": "Message"
+  },
+  {
+    "type": "put",
+    "url": "/message",
+    "title": "To update a message.",
+    "name": "updateMessage",
+    "group": "Message",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Message to be updated.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "updatedMessage",
+            "description": "<p>Updated message.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ErrorWhileUpdatingMessage",
+            "description": "<p>Error while updating the message.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "ErrorWhileUpdatingMessage-Response:",
+          "content": "{\n  success: false,\n  message: 'Error while updating message'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Response : ",
+          "content": "{\n  success: true,\n  message: \"Updated successfully\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "server/controllers/appVersion.controller.js",
+    "groupTitle": "Message"
   }
 ] });
