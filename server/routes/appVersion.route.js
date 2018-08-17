@@ -7,4 +7,7 @@ module.exports = (server) => {
     server.get('/version/latest', appVersionValidation.getLatestVersion, appVersionController.getLatestVersion);
     server.get('/version/list', appVersionValidation.listAllVersions, appVersionController.listAllVersions);
     server.get('/version/updated', appVersionValidation.getUpdatedVersions, appVersionController.getUpdatedVersions);
+    server.get('/message', appVersionController.getMessage);
+    server.put('/message', appVersionValidation.updateMessage, appVersionController.updateMessage);
+    server.post('/message', appVersionValidation.addMessage, appVersionController.addMessage);
 };
