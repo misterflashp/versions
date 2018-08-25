@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 
-
 let appSchema = new mongoose.Schema({
   version: {
     type: Number,

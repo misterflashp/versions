@@ -56,5 +56,5 @@ module.exports = {
   addAppDetails,
   getUpdatedVersions,
   getLatestVersion,
-  listAllVersions
+  listAllVersions,
 };

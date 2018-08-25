@@ -28,6 +28,7 @@ let appVersionDbo = require('../dbos/appVersion.dbo');
 *    message: 'App details saved successfully.'
 * }
 */
+
 let addAppDetails = (req, res) => {
   let details = req.body;
   let { version,
@@ -213,7 +214,6 @@ let getUpdatedVersions = (req, res) => {
       res.status(status).send(response);
     });
 }
-
 module.exports = {
   addAppDetails,
   getLatestVersion,

@@ -1,6 +1,5 @@
 let AppModel = require('../models/appVersion.model');
 
-
 let getAppDetails = (version, appCode, cb) => {
   AppModel.findOne({
     version,
@@ -31,7 +30,7 @@ let listAllVersions = (appCode, cb) => {
         'version': -1
       }
     }, (error, result) => {
-      console.log(error, result);
+      //console.log(error, result);
       if (error) cb(error, null);
       else cb(null, result || []);
     });
