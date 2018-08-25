@@ -5,36 +5,37 @@ let appMessageDbo = require('../dbos/appMessage.dbo');
 * @apiName addMessage
 * @apiGroup Message
 * @apiParam {String} message Message to be saved.
+* @apiParam {String} appCode Type of app.
+* @apiParam {String} name Message name.
 * @apiError ErrorWhileAddingMessage Error while adding the message.
 * @apiErrorExample ErrorWhileAddingMessage-Response:
 * {
 *   success: false,
-*   message: 'Error while saving message'
+*   message: 'Error while adding message'
 * }
 *@apiSuccessExample Response : 
 * {
 *   success: true,
-*   list: {
-*    "message": "This is the message",
-*    "updatedOn": "2018-08-17T12:36:45.361Z"
-*   }
+*   message: "Added successfully"
 * }
 */
 let addMessage = (req, res) => {
-  let { message } = req.body;
+  let { message,
+    name,
+      appCode } = req.body;
   let updatedOn = Date.now();
   async.waterfall([
     (next) => {
-      appMessageDbo.addMessage(message, updatedOn,
-        (error, response) => {
+      appMessageDbo.updateMessage({ message, appCode, updatedOn, name },
+        (error, result) => {
           if (error) {
             next({
               status: 500,
-              message: 'Error while saving message'
+              message: 'Error while adding message'
             }, null);
           } else next(null, {
             status: 200,
-            list: response
+            message: 'Added successfully'
           });
         });
     }], (error, result) => {
@@ -51,7 +52,8 @@ let addMessage = (req, res) => {
 * @apiName updateMessage
 * @apiGroup Message
 * @apiParam {String} message Message to be updated.
-* @apiParam {String} updatedMessage Updated message.
+* @apiParam {String} appCode Type of app.
+* @apiParam {String} name Message name.
 * @apiError ErrorWhileUpdatingMessage Error while updating the message.
 * @apiErrorExample ErrorWhileUpdatingMessage-Response:
 * {
@@ -66,11 +68,11 @@ let addMessage = (req, res) => {
 */
 let updateMessage = (req, res) => {
   let { message,
-    updatedMessage } = req.body;
+    name, appCode } = req.body;
   let updatedOn = Date.now();
   async.waterfall([
     (next) => {
-      appMessageDbo.updateMessage(message, updatedMessage, updatedOn,
+      appMessageDbo.updateMessage({ message, appCode, name, updatedOn },
         (error, response) => {
           if (error) {
             next({
@@ -95,6 +97,7 @@ let updateMessage = (req, res) => {
 * @api {get} /message To get all available messages.
 * @apiName getMessage
 * @apiGroup Message
+* @apiParam {String} appCode Type of app.
 * @apiError ErrorWhileFetchingMessage Error while fetching the messages.
 * @apiErrorExample ErrorWhileFetchingMessage-Response:
 * {
@@ -108,9 +111,10 @@ let updateMessage = (req, res) => {
 * }
 */
 let getMessage = (req, res) => {
+  let { appCode } = req.query;
   async.waterfall([
     (next) => {
-      appMessageDbo.getMessage((error, response) => {
+      appMessageDbo.getMessage(appCode,(error, result) => {
         if (error) {
           next({
             status: 500,
@@ -118,7 +122,7 @@ let getMessage = (req, res) => {
           }, null);
         } else next(null, {
           status: 200,
-          list: response
+          messages: result
         });
       });
     }], (error, result) => {

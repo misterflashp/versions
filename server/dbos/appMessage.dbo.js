@@ -1,42 +1,32 @@
 let MessageModel = require('../models/appMessage.model');
 
-let getMessage = (cb) => {
-    MessageModel.find({}, {
+let getMessage = (appCode, cb) => {
+    MessageModel.find({ appCode }, {
         '_id': 0
-    }, {
-            sort: {
-                'updatedOn': -1
-            }
-        }, (error, result) => {
-            if (error) cb(error, null);
-            else cb(null, result || []);
-        });
-};
-
-let addMessage = (message, updatedOn, cb) => {
-    let obj = {
-        'message': message,
-        'updatedOn': updatedOn
-    }
-    let newMessage = new MessageModel(obj);
-    newMessage.save((error, result) => {
+    }, (error, result) => {
         if (error) cb(error, null);
-        cb(null, result);
+        else cb(null, result || []);
     });
 };
 
-let updateMessage = (message, updatedMessage, updatedOn, cb) => {
-    MessageModel.findOneAndUpdate({
-        message
+
+let updateMessage = (obj, cb) => {
+    let { appCode, name } = obj;
+
+    MessageModel.updateOne({
+        name, appCode
     }, {
-            $set: { 'message': updatedMessage, 'updatedOn': updatedOn }
+            $set: obj
+        }, {
+            upsert: true
         }, (error, result) => {
+            console.log(result);
             if (error) cb(error, null);
             else cb(null, result || []);
         });
-};
+}
+
 module.exports = {
     getMessage,
-    updateMessage,
-    addMessage
+    updateMessage
 };
