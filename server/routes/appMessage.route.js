@@ -5,4 +5,5 @@ module.exports = (server) => {
     server.get('/message', appMessageValidation.getMessage, appMessageController.getMessage);
     server.put('/message', appMessageValidation.updateMessage, appMessageController.updateMessage);
     server.post('/message', appMessageValidation.updateMessage, appMessageController.updateMessage);
+    server.get('/message/search', appMessageValidation.searchMessage, appMessageController.searchMessage);
 };

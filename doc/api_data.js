@@ -247,10 +247,10 @@ define({ "api": [
     "groupTitle": "AppDetails"
   },
   {
-    "type": "post",
+    "type": "get",
     "url": "/message",
-    "title": "To add a message.",
-    "name": "addMessage",
+    "title": "To get all available messages.",
+    "name": "getMessage",
     "group": "Message",
     "parameter": {
       "fields": {
@@ -259,50 +259,12 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "message",
-            "description": "<p>Message to be saved.</p>"
+            "field": "appCode",
+            "description": "<p>Type of app.</p>"
           }
         ]
       }
     },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "ErrorWhileAddingMessage",
-            "description": "<p>Error while adding the message.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "ErrorWhileAddingMessage-Response:",
-          "content": "{\n  success: false,\n  message: 'Error while saving message'\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Response : ",
-          "content": "{\n  success: true,\n  list: {\n   \"message\": \"This is the message\",\n   \"updatedOn\": \"2018-08-17T12:36:45.361Z\"\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "server/controllers/appMessage.controller.js",
-    "groupTitle": "Message"
-  },
-  {
-    "type": "get",
-    "url": "/message",
-    "title": "To get all available messages.",
-    "name": "getMessage",
-    "group": "Message",
     "error": {
       "fields": {
         "Error 4xx": [
@@ -336,9 +298,9 @@ define({ "api": [
     "groupTitle": "Message"
   },
   {
-    "type": "put",
+    "type": "post/put",
     "url": "/message",
-    "title": "To update a message.",
+    "title": "To update or add message.",
     "name": "updateMessage",
     "group": "Message",
     "parameter": {
@@ -346,7 +308,7 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Object",
             "optional": false,
             "field": "message",
             "description": "<p>Message to be updated.</p>"
@@ -355,8 +317,15 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "updatedMessage",
-            "description": "<p>Updated message.</p>"
+            "field": "appCode",
+            "description": "<p>Type of app.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Message name.</p>"
           }
         ]
       }
