@@ -15,7 +15,7 @@ let messageSchema = new mongoose.Schema({
     },
     updatedOn: {
         type: Date,
-        required: Date.now
+        required: true
     }
 }, {
         versionKey: false,
