@@ -15,7 +15,7 @@ let getMessage = (req, res, next) => {
 
 let updateMessage = (req, res, next) => {
   let updateMessageSchema = joi.object().keys({
-    message: joi.string().required(),
+    message: joi.object().required(),
     name: joi.string().required(),
     appCode: joi.string().required()
   });
