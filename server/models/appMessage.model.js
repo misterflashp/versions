@@ -6,7 +6,7 @@ let messageSchema = new mongoose.Schema({
         required: true
     },
     message: {
-        type: String,
+        type: Object,
         required: true
     },
     appCode: {
@@ -15,7 +15,7 @@ let messageSchema = new mongoose.Schema({
     },
     updatedOn: {
         type: Date,
-        required: Date.now
+        required: true
     }
 }, {
         versionKey: false,
