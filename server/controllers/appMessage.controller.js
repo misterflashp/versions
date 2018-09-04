@@ -69,7 +69,6 @@ let getMessage = (req, res) => {
     order } = req.query;
   sortBy = (sortBy) ? ((sortBy === "name") ? sortBy : "message." + sortBy) : "name";
   let ord = (order) ? ((order === 'desc') ? -1 : 1) : 1;
-  console.log(sortBy, ord);
   async.waterfall([
     (next) => {
       appMessageDbo.getMessage({ appCode, sortBy, ord }, (error, result) => {

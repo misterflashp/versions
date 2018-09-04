@@ -22,7 +22,6 @@ let variableDbo = require('../dbos/variable.dbo');
 * }
 */
 
-
 let updateVariable = (req, res) => {
   let { name,
     value, appCode, varType } = req.body;
