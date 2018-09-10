@@ -1,9 +1,8 @@
 let jwt = require('jsonwebtoken');
 const secretKey = 'DAYADHCOSMIC!@#)(87^%)';
 
-module.exports.issueToken=(args,exp = null,callback)=>
+let issueToken=(args,exp = null,callback)=>
 {
-	var date = new Date();
 	var issuedAt = Math.floor(Date.now() / 1000);
 	var notBefore=issuedAt+10;
 	var expire= notBefore+(24*60*60);
@@ -15,4 +14,7 @@ module.exports.issueToken=(args,exp = null,callback)=>
 		};
 token = jwt.sign(data, secretKey);
 callback(null,token);
+}
+module.exports = {
+	issueToken
 }
