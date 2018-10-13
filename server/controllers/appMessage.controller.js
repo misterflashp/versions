@@ -91,21 +91,22 @@ let getMessage = (req, res) => {
       res.status(status).send(response);
     });
 }
-
 let searchMessage = (req, res) => {
-  let { searchKey } = req.query;
+  let { searchKey,
+    appCode } = req.query;
   async.waterfall([
     (next) => {
-      appMessageDbo.searchMessage(searchKey, (error, result) => {
-        if (error) next({
-          status: 500,
-          message: 'Error while searching '
-        }, null);
-        else next(null, {
-          status: 200,
-          info: result
+      appMessageDbo.searchMessage({ searchKey, appCode },
+        (error, result) => {
+          if (error) next({
+            status: 500,
+            message: 'Error while searching '
+          }, null);
+          else next(null, {
+            status: 200,
+            info: result
+          });
         });
-      });
     }
   ], (error, success) => {
     let response = Object.assign({

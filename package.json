@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "nodemon --inspect server.js",
     "test": "mocha test/version/*.test.js",
-    "dev": "nodemon --inspect server.js",
     "start": "node server.js"
   },
   "author": "",
