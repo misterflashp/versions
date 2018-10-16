@@ -1,7 +1,7 @@
 let async = require('async');
 let appMessageDbo = require('../dbos/appMessage.dbo');
-let logsDbo = require('../dbos/logs.dbo');
-let jwt = require('../helpers/JWT');
+// let logsDbo = require('../dbos/logs.dbo');
+// let jwt = require('../helpers/JWT');
 let lodash = require('lodash');
 var file = '/tmp/data.xml';
 let fs = require('fs');
