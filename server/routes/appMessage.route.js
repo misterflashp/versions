@@ -6,4 +6,5 @@ module.exports = (server) => {
     server.put('/message', appMessageValidation.updateMessage, appMessageController.updateMessage);
     server.post('/message', appMessageValidation.updateMessage, appMessageController.updateMessage);
     server.get('/message/search', appMessageValidation.searchMessage, appMessageController.searchMessage);
+    server.get('/message/xml', appMessageValidation.getMessageFile, appMessageController.getMessageFile);
 };

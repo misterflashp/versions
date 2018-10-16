@@ -1,5 +1,10 @@
 let async = require('async');
 let appMessageDbo = require('../dbos/appMessage.dbo');
+let logsDbo = require('../dbos/logs.dbo');
+let jwt = require('../helpers/JWT');
+let lodash = require('lodash');
+var file = '/tmp/data.xml';
+let fs = require('fs');
 /**
 * @api {post/put} /message To update or add message.
 * @apiName updateMessage
@@ -117,9 +122,70 @@ let searchMessage = (req, res) => {
     res.status(status).send(response);
   });
 }
+let getMessageFile = (req, res) => {
+  let { appCode } = req.query;
+  async.waterfall([
+    (next) => {
+      appMessageDbo.getOneMessage({ appCode }, (error, result) => {
+        if (error) {
+          next({
+            status: 500,
+            message: 'Error while fetching message'
+          }, null);
+        } else {
+          let resource = "<resources>\n <lang  name = \"english\"> \n";
+          fs.writeFile(file, '');
+          fs.appendFileSync(file, resource);
+          lodash.forEach(result, (obj) => {
+            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.english + "</strings>\n";
+            fs.appendFileSync(file, string);
+          });
+          fs.appendFileSync(file, "/<lang>\n\n<lang name = \"russian\">\n");
+          lodash.forEach(result, (obj) => {
+            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.russian + "</strings>\n";
+            fs.appendFileSync(file, string);
+          });
+          // if (result[0].appCode == "SNC" || result[0].appCode == "SENTINEL") {
+          fs.appendFileSync(file, "</lang>\n\n<lang name = \"spanish\">\n");
+          lodash.forEach(result, (obj) => {
+            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.spanish + "</strings>\n";
+            fs.appendFileSync(file, string);
+          });
+          // }
+          if (result[0].appCode == "SENTINEL") {
+            fs.appendFileSync(file, "</lang>\n\n<lang name = \"chinese\">\n");
+            lodash.forEach(result, (obj) => {
+              let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.chinese + "</strings>\n";
+              fs.appendFileSync(file, string);
+            });
+            fs.appendFileSync(file, "</lang>\n\n<lang name = \"japanese\">\n");
+            lodash.forEach(result, (obj) => {
+              let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.japanese + "</strings>\n";
+              fs.appendFileSync(file, string);
+            });
+          }
+
+          let resourceend = "</lang>\n</resources>";
+          fs.appendFileSync(file, resourceend);
+          next(null, {
+            status: 200,
+            messages: "Download the file"
+          });
+        }
+      });
+    }], (error, result) => {
+      let response = Object.assign({
+        success: !error
+      }, error || result);
+      let status = response.status;
+      delete (response.status);
+      res.status(status).download(file, 'messages.xml');
+    });
+}
 
 module.exports = {
   getMessage,
   updateMessage,
-  searchMessage
+  searchMessage,
+  getMessageFile
 };

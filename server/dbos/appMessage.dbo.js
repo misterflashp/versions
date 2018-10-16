@@ -50,8 +50,18 @@ let updateMessage = (obj, cb) => {
         });
 }
 
+let getOneMessage = (obj, cb) => {
+    MessageModel.find(obj, {
+            '_id': 0
+        }, (error, result) => {
+            if (error) cb(error, null);
+            cb(null, result || null);
+        });
+};
+
 module.exports = {
     getMessage,
     updateMessage,
-    searchMessage
+    searchMessage,
+    getOneMessage
 };

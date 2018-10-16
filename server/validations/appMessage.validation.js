@@ -41,9 +41,20 @@ let updateMessage = (req, res, next) => {
   });
   else next();
 };
-
+let getMessageFile = (req, res, next) => {
+  let getMessageFileSchema = joi.object().keys({
+    appCode: joi.string().required()
+    });
+  let { error } = joi.validate(req.query, getMessageFileSchema);
+  if (error) res.status(422).send({
+    success: false,
+    error
+  });
+  else next();
+};
 module.exports = {
   updateMessage,
   getMessage,
-  searchMessage
+  searchMessage,
+  getMessageFile
 };
