@@ -124,6 +124,7 @@ let searchMessage = (req, res) => {
 }
 let getMessageFile = (req, res) => {
   let { appCode } = req.query;
+  fs.writeFile(file, '');
   async.waterfall([
     (next) => {
       appMessageDbo.getOneMessage({ appCode }, (error, result) => {
@@ -134,33 +135,34 @@ let getMessageFile = (req, res) => {
           }, null);
         } else {
           let resource = "<resources>\n <lang  name = \"english\"> \n";
-          fs.writeFile(file, '');
           fs.appendFileSync(file, resource);
           lodash.forEach(result, (obj) => {
-            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.english + "</strings>\n";
+            let string = "\t<string name = \"" + obj.name + "\"> " + obj.message.english + "</string>\n";
             fs.appendFileSync(file, string);
           });
-          fs.appendFileSync(file, "/<lang>\n\n<lang name = \"russian\">\n");
+          fs.appendFileSync(file, "</lang>\n\n<lang name = \"russian\">\n");
           lodash.forEach(result, (obj) => {
-            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.russian + "</strings>\n";
+            let string = "\t<string name = \"" + obj.name + "\"> " + obj.message.russian + "</string>\n";
             fs.appendFileSync(file, string);
           });
           // if (result[0].appCode == "SNC" || result[0].appCode == "SENTINEL") {
           fs.appendFileSync(file, "</lang>\n\n<lang name = \"spanish\">\n");
           lodash.forEach(result, (obj) => {
-            let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.spanish + "</strings>\n";
+            let string = "\t<string name = \"" + obj.name + "\"> " + obj.message.spanish + "</string>\n";
             fs.appendFileSync(file, string);
           });
           // }
-          if (result[0].appCode == "SENTINEL") {
+          if ((result[0].appCode) && ((result[0].appCode) == "SENTINEL")) {
             fs.appendFileSync(file, "</lang>\n\n<lang name = \"chinese\">\n");
             lodash.forEach(result, (obj) => {
-              let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.chinese + "</strings>\n";
+              let string = "\t<string name = \"" + obj.name + "\"> " + obj.message.chinese + "</string>\n";
               fs.appendFileSync(file, string);
             });
+          }
+          if ((result[0].appCode) && (((result[0].appCode) == "SENTINEL") || ((result[0].appCode) == "SENTINEL_CLIENT"))) {
             fs.appendFileSync(file, "</lang>\n\n<lang name = \"japanese\">\n");
             lodash.forEach(result, (obj) => {
-              let string = "\t<strings name = \"" + obj.name + "\"> " + obj.message.japanese + "</strings>\n";
+              let string = "\t<string name = \"" + obj.name + "\"> " + obj.message.japanese + "</string>\n";
               fs.appendFileSync(file, string);
             });
           }
@@ -179,7 +181,7 @@ let getMessageFile = (req, res) => {
       }, error || result);
       let status = response.status;
       delete (response.status);
-      res.status(status).download(file, 'messages.xml');
+      res.status(status).download(file, `${appCode}_messages.xml`);
     });
 }
 
