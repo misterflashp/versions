@@ -1,6 +1,6 @@
 let async = require('async');
 let loginDbo = require('../dbos/login.dbo');
-var jwt = require('./JWToken');
+var jwt = require('../helpers/JWT');
 
 let login = (req, res) => {
   let {
@@ -15,23 +15,29 @@ let login = (req, res) => {
       }, (error, result) => {
         if (error) next({
           status: 500,
-          message: 'error while logging in'
+          message: 'Error while logging in'
         }, null);
         else {
           if (result.length) {
             let out = {};
-            jwt.issueToken(result, exp = null, function (err, token) {
-              out['token'] = token;
-            });
-            next(null, {
-              status: 200,
-              details: result[0],
-              token: out
+            jwt.issueToken(result, (err, token) => {
+              if (error) next({
+                status: 500,
+                message: ' Error occured while creating JWT'
+              }, null);
+              else {
+                out['token'] = token;
+                next(null, {
+                  status: 200,
+                  details: result[0],
+                  token: out
+                });
+              }
             });
           } else {
             next({
               status: 400,
-              message: 'invalid login credentials'
+              message: 'Invalid login credentials'
             }, null);
           }
         }
@@ -42,7 +48,7 @@ let login = (req, res) => {
       success: !error
     }, error || result);
     let status = response.status;
-    delete(response.status);
+    delete (response.status);
     res.status(status).send(response);
   });
 }
@@ -64,11 +70,11 @@ let signUp = (req, res) => {
       }, (error, result) => {
         if (error) next({
           status: 500,
-          message: 'error while signing up'
+          message: 'Error while signing up'
         }, null);
         else next(null, {
           status: 200,
-          message: 'sign up successful'
+          message: 'Sign Up successful'
         })
       });
     }
@@ -77,7 +83,7 @@ let signUp = (req, res) => {
       success: !error
     }, error || result);
     let status = response.status;
-    delete(response.status);
+    delete (response.status);
     res.status(status).send(response);
   });
 }

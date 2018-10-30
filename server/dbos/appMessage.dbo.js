@@ -22,11 +22,12 @@ let searchMessage = (obj, cb) => {
 
 
 let getMessage = (obj, cb) => {
-    let { appCode, sortBy, ord } = obj;
+    let { appCode, sortBy, ord, isActive } = obj;
     let sortObj = {};
     sortObj[sortBy] = ord;
     MessageModel.find({
-        appCode
+        appCode,
+        isActive
     }, {}, {
             sort: sortObj
         }, (error, result) => {
@@ -44,7 +45,6 @@ let updateMessage = (obj, cb) => {
         }, {
             upsert: true
         }, (error, result) => {
-            console.log(result);
             if (error) cb(error, null);
             else cb(null, result || []);
         });
@@ -52,11 +52,11 @@ let updateMessage = (obj, cb) => {
 
 let getOneMessage = (obj, cb) => {
     MessageModel.find(obj, {
-            '_id': 0
-        }, (error, result) => {
-            if (error) cb(error, null);
-            cb(null, result || null);
-        });
+        '_id': 0
+    }, (error, result) => {
+        if (error) cb(error, null);
+        cb(null, result || null);
+    });
 };
 
 module.exports = {

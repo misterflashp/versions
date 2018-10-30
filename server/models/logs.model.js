@@ -1,11 +1,19 @@
 let mongoose = require('mongoose');
 
-let messageSchema = new mongoose.Schema({
-    name: {
+let logSchema = new mongoose.Schema({
+    user: {
         type: String,
         required: true
     },
-    message: {
+    messageName: {
+        type: String,
+        required: true
+    },
+    oldMessage: {
+        type: Object,
+        required: true
+    },
+    newMessage: {
         type: Object,
         required: true
     },
@@ -27,4 +35,4 @@ let messageSchema = new mongoose.Schema({
         strict: true
     });
 
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = mongoose.model('log', logSchema);
