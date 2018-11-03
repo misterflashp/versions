@@ -3,12 +3,13 @@ let joi = require('joi');
 
 let addAppDetails = (req, res, next) => {
   let versionSchema = joi.object().keys({
-    version: joi.number().required(),
-    fileUrl: joi.string().required(),
-    appCode: joi.string().required()
+    version: joi.string().required(),
+    fileLink: joi.string().required(),
+    appCode: joi.string().required(),
+    appName: joi.string().required()
   });
   let { error } = joi.validate(req.body, versionSchema);
-  if (error) res.status(400).send({
+  if (error) res.status(422).send({
     success: false,
     error
   });
@@ -20,7 +21,7 @@ let getLatestVersion = (req, res, next) => {
     appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
-  if (error) res.status(400).send({
+  if (error) res.status(422).send({
     success: false,
     error
   });
@@ -32,7 +33,7 @@ let listAllVersions = (req, res, next) => {
     appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
-  if (error) res.status(400).send({
+  if (error) res.status(422).send({
     success: false,
     error
   });
@@ -41,11 +42,11 @@ let listAllVersions = (req, res, next) => {
 
 let getUpdatedVersions = (req, res, next) => {
   let updatedVersionsSchema = joi.object().keys({
-    version: joi.number().required(),
+    version: joi.string().required(),
     appCode: joi.string().required()
   });
   let { error } = joi.validate(req.query, updatedVersionsSchema);
-  if (error) res.status(400).send({
+  if (error) res.status(422).send({
     success: false,
     error
   });

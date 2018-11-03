@@ -33,7 +33,7 @@ let addAppDetails = (req, res) => {
   let details = req.body;
   let { version,
     appCode } = details;
-  details.fileName = details.fileUrl.split('/').slice(-1);
+  details.fileName = details.fileLink.split('/').slice(-1);
   async.waterfall([
     (next) => {
       appVersionDbo.getAppDetails(version, appCode,

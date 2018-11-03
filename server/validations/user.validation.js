@@ -2,7 +2,7 @@ let joi = require('joi');
 
 let login = (req, res, next) => {
     let loginSchema = joi.object().keys({
-        name: joi.string().required(),
+        username: joi.string().required(),
         password: joi.string().required()
     });
     let {
@@ -17,9 +17,9 @@ let login = (req, res, next) => {
 let signUp = (req, res, next) => {
     let signUpSchema = joi.object().keys({
         name: joi.string().required(),
-        email: joi.string().required(),
+        email: joi.string(),
         password: joi.string().required(),
-        lang: joi.array()
+        username: joi.string().required()
     });
     let {
         error

@@ -1,19 +1,23 @@
 let mongoose = require('mongoose');
 
 let appSchema = new mongoose.Schema({
+  appCode: {
+    type: String,
+    required: true
+  },
+  appName: {
+    type: String,
+    required: true
+  },
   version: {
-    type: Number,
+    type: String,
     required: true
   },
   fileName: {
     type: String,
     required: true
   },
-  fileUrl: {
-    type: String,
-    required: true
-  },
-  appCode: {
+  fileLink: {
     type: String,
     required: true
   },
@@ -21,7 +25,7 @@ let appSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  checksum: {
+  fileChecksum: {
     type: String,
     default: null
   }

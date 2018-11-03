@@ -1,16 +1,16 @@
 let async = require('async');
-let loginDbo = require('../dbos/login.dbo');
+let userDbo = require('../dbos/user.dbo');
 var jwt = require('../helpers/JWT');
 
 let login = (req, res) => {
   let {
-    name,
+    username,
     password
   } = req.query;
   async.waterfall([
     (next) => {
-      loginDbo.login({
-        name,
+      userDbo.login({
+        username,
         password
       }, (error, result) => {
         if (error) next({
@@ -20,7 +20,7 @@ let login = (req, res) => {
         else {
           if (result.length) {
             let out = {};
-            jwt.issueToken(result, (err, token) => {
+            jwt.issueToken(result, (error, token) => {
               if (error) next({
                 status: 500,
                 message: ' Error occured while creating JWT'
@@ -57,16 +57,33 @@ let signUp = (req, res) => {
   let {
     email,
     password,
-    name,
-    lang
+    username,
+    name
   } = req.body;
   async.waterfall([
     (next) => {
-      loginDbo.signUp({
+      userDbo.getUserDetails({username},(error, result)=>{
+        if(error) next({
+          status:500,
+          message: 'Error occured while checking username'
+        },null);
+        else if(result && result.length){
+          next({
+          status: 400,
+          message: "User already exists"           
+          }, null);
+        }
+        else{
+          next(null);
+        }
+      });
+    },
+    (next)=>{
+      userDbo.signUp({
         email,
         password,
         name,
-        lang
+        username
       }, (error, result) => {
         if (error) next({
           status: 500,

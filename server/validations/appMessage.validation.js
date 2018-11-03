@@ -3,6 +3,7 @@ let joi = require('joi');
 let getMessage = (req, res, next) => {
   let updateMessageSchema = joi.object().keys({
     appCode: joi.string().required(),
+    version: joi.string().required(),
     sortBy: joi.string(),
     order: joi.string()
   });
@@ -30,10 +31,11 @@ let searchMessage = (req, res, next) => {
 
 let updateMessage = (req, res, next) => {
   let updateMessageSchema = joi.object().keys({
-    message: joi.object().required(),
+    value: joi.object().required(),
     name: joi.string().required(),
     appCode: joi.string().required(),
-    type: joi.string()
+    type: joi.string(),
+    version: joi.string().required()
   });
   let { error } = joi.validate(req.body, updateMessageSchema);
   if (error) res.status(422).send({
@@ -45,8 +47,9 @@ let updateMessage = (req, res, next) => {
 let getMessageFile = (req, res, next) => {
   let getMessageFileSchema = joi.object().keys({
     appCode: joi.string().required(),
-    languages: joi.array().required()
-    });
+    languages: joi.array().required(),
+    version: joi.string().required()
+  });
   let { error } = joi.validate(req.query, getMessageFileSchema);
   if (error) res.status(422).send({
     success: false,
