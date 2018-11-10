@@ -15,10 +15,12 @@ let getMessage = (req, res, next) => {
   else next();
 };
 
+
 let searchMessage = (req, res, next) => {
   let searchMessageSchema = joi.object().keys({
     searchKey: joi.string().required(),
-    appCode: joi.string().required()
+    appCode: joi.string().required(),
+    version: joi.string().required()
   });
   let { error } = joi.validate(req.query, searchMessageSchema);
   if (error) res.status(422).send({

@@ -8,13 +8,11 @@ let getVariable = (object, cb) => {
 
 let updateVariable = (object, cb) => {
   let { name, appCode, varType } = object;
-  console.log(object);
   VariableModel.updateOne({ appCode, varType, name }, {
     $set: object
   }, {
       upsert: true
     }, (error, result) => {
-      console.log(result);
       if (error) cb(error, null);
       else cb(null, result);
     })

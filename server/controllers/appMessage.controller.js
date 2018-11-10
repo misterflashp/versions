@@ -101,70 +101,7 @@ let updateMessage = (req, res) => {
       res.status(status).send(response);
     });
 }
-/**
-* @api {post/put} /message To update or add message.
-* @apiName updateMessage
-* @apiGroup Message
-* @apiParam {Object} message Message to be updated.
-* @apiParam {String} appCode Type of app.
-* @apiParam {String} name Message name.
-* @apiError ErrorWhileUpdatingMessage Error while updating the message.
-* @apiErrorExample ErrorWhileUpdatingMessage-Response:
-* {
-*   success: false,
-*   message: 'Error while updating message'
-* }
-*@apiSuccessExample Response : 
-* {
-*   success: true,
-*   message: "Updated successfully"
-* }
-*/
 
-// let updateMessage = (req, res) => {
-//   let { message,
-//     name, appCode } = req.body;
-//   let updatedOn = Date.now();
-//   async.waterfall([
-//     (next) => {
-//       appMessageDbo.updateMessage({ message, appCode, name, updatedOn },
-//         (error, response) => {
-//           if (error) {
-//             next({
-//               status: 500,
-//               message: 'Error while updating message'
-//             }, null);
-//           } else next(null, {
-//             status: 200,
-//             message: 'Updated successfully',
-//           });
-//         });
-//     }], (error, result) => {
-//       let response = Object.assign({
-//         success: !error
-//       }, error || result);
-//       let status = response.status;
-//       delete (response.status);
-//       res.status(status).send(response);
-//     });
-// }
-/**
-* @api {get} /message To get all available messages.
-* @apiName getMessage
-* @apiGroup Message
-* @apiParam {String} appCode Type of app.
-* @apiError ErrorWhileFetchingMessage Error while fetching the messages.
-* @apiErrorExample ErrorWhileFetchingMessage-Response:
-* {
-*   success: false,
-*   message: 'Error while fetching message'
-* }
-*@apiSuccessExample Response : 
-* {
-*   success: true,
-*   list: List of all available messages with updated dates.
-* }
-*/
 let getMessage = (req, res) => {
   let { appCode,
     sortBy,
@@ -213,19 +150,55 @@ let getMessage = (req, res) => {
 }
 let searchMessage = (req, res) => {
   let { searchKey,
-    appCode } = req.query;
+    appCode,
+    version } = req.query;
+  searchKey = searchKey.toLowerCase();
   async.waterfall([
     (next) => {
-      appMessageDbo.searchMessage({ searchKey, appCode },
+      appMessageDbo.searchMessageNew({ appCode },
         (error, result) => {
           if (error) next({
             status: 500,
             message: 'Error while searching '
           }, null);
-          else next(null, {
-            status: 200,
-            info: result
-          });
+          else if (result && result.length) {
+            let searched = [];
+            lodash.forEach(result, (res) => {
+              if ((res.values).hasOwnProperty(version)) {
+                let msg = res.values[version];
+                if ((res.name) && (res.name).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.english) && (msg.english).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.spanish) && (msg.spanish).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.russian) && (msg.russian).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.chinese) && (msg.chinese).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.turkish) && (msg.turkish).toLowerCase().indexOf(searchKey) > -1 ||
+                  (msg.japanese) && (msg.japanese).toLowerCase().indexOf(searchKey) > -1) {
+                  let obj = Object.assign({
+                    name: res.name,
+                    appCode: res.appCode,
+                    message: msg,
+                    updatedOn: res.updatedOn
+                  });
+                  searched.push(obj);
+                }
+              }
+            });
+            if (searched.length) next(null, {
+              status: 200,
+              success: true,
+              info: searched
+            });
+            else next({
+              status: 400,
+              message: "No records found"
+            }, null);
+          }
+          else {
+            next({
+              status: 400,
+              message: "No records found"
+            }, null);
+          }
         });
     }
   ], (error, success) => {
@@ -237,7 +210,6 @@ let searchMessage = (req, res) => {
     res.status(status).send(response);
   });
 }
-
 let getMessageFile = (req, res) => {
   let { appCode, languages, version } = req.query;
   let isActive = true;
@@ -327,62 +299,7 @@ let getMessageFile = (req, res) => {
       }
     });
 }
-// let getMessageFile = (req, res) => {
-//   let { appCode, languages } = req.query;
-//   let isActive = true;
-//   let language = languages[0];
-//   console.log(languages);
-//   fs.writeFile(file, '');
-//   async.waterfall([
-//     (next) => {
-//       appMessageDbo.getOneMessage({ appCode, isActive }, (error, result) => {
-//         if (error) {
-//           next({
-//             status: 500,
-//             message: 'Error while fetching message'
-//           }, null);
-//         } else if (result && result.length) {
-//           let msg = result[0].message;
-//           if (msg.hasOwnProperty(language)) {
 
-//             let resource = `<resources>\n <lang  name = \"${language}\"> \n`;
-//             fs.appendFileSync(file, resource);
-//             lodash.forEach(result, (obj) => {
-//               let string = "\t<string name = \"" + obj.name + "\"> " + obj.message[language] + "</string>\n";
-//               fs.appendFileSync(file, string);
-//             });
-//             let resourceend = "</lang>\n</resources>";
-//             fs.appendFileSync(file, resourceend);
-//             next(null, {
-//               status: 200,
-//               messages: "Download the file"
-//             });
-//           } else {
-//             next({
-//               status: 400,
-//               message: 'Requested language transalation is not available'
-//             }, null);
-//           }
-//         } else {
-//           next({
-//             status: 400,
-//             message: ' No records found'
-//           }, null);
-//         }
-//       });
-//     }], (error, result) => {
-//       let response = Object.assign({
-//         success: !error
-//       }, error || result);
-//       let status = response.status;
-//       delete (response.status);
-//       if (status == 200) {
-//         res.status(status).download(file, `${appCode}_${language}_Messages.xml`);
-//       } else {
-//         res.status(status).send(response);
-//       }
-//     });
-// }
 let getLogs = (req, res) => {
   let { appCode,
     user,
